@@ -22,13 +22,13 @@ connection.connect()
  */
 router.get("/getActiveFundraiser", (req, res) => { // use express router to make a GET API
     connection.query( // mysql query
-        "SELECT * FROM `FUNDRAISER` where ACTIVE = '1'", // select data which is activated
-        (err,result,fields)=>{ // get result
+        "SELECT * FROM `FUNDRAISER` where `ACTIVE` = '1'", // select data which is activated
+        (err,records)=>{ // get result
             if(err){ // if error occurred
                 console.error("An error occurred while querying FUNDRAISER", err) // send an error message
             }
             else{
-                res.send(result); // send result
+                res.send(records); // send result
             }
         }
     )
@@ -41,38 +41,105 @@ router.get("/getActiveFundraiser", (req, res) => { // use express router to make
 
 /**
  * GET CATEGORY
- *
+ * This API will get all categories from the database
  */
 router.get("/getCategory", (req, res)=>{
     connection.query(
-        "SELECT DISTINCT `NAME` FROM `CATEGORY`",
-        (err, result, fields)=>{
+        "SELECT * FROM `CATEGORY`", // get all categories
+        (err, records)=>{
             if(err){
                 console.error("An error occurred while querying categories", err);
             }
             else{
-                res.send(result);
+                res.send(records);
             }
         });
 });
+/**
+ * GET ORGANIZER
+ * This API will get all organizers from the database
+ */
 router.get("/getOrganizer", (req, res)=>{
     connection.query(
-        "SELECT DISTINCT `ORGANIZER` FROM `FUNDRAISER`",
-        (err, result, fields)=>{
+        "SELECT DISTINCT `ORGANIZER` FROM `FUNDRAISER`", // get all organizers
+        (err, records)=>{
             if(err){
                 console.error("An error occurred while querying organizers", err);
             }
             else{
-                res.send(result);
+                res.send(records);
             }
         });
+});
+/**
+ * GET CITY
+ * This API will get all cities from the database
+ */
+router.get("/getCity",(req, res)=>{
+   connection.query("SELECT DISTINCT `CITY` FROM `FUNDRAISER`", // get all cities
+       (err, records)=>{
+       if(err){
+           console.error("An error occurred while querying city", err);
+       }
+       else{
+           res.send(records);
+       }
+   });
 });
 
 /**
  * GET Specific category fundraiser
  * This method will need user select specific category to search fundraisers
+ * @param city
+ * @param organizer
+ * @param category
  */
-router.get
+router.get("/searchFundraiser",(req, res)=>{
+    const {city, organizer, category} = req.query; // get the query param
+    /* INITIALIZE SQL */
+    let sql = "SELECT * FROM `fundraiser` JOIN crowdfunding_db.category c on c.CATEGORY_ID = fundraiser.CATEGORY_ID WHERE `ACTIVE` = '1'";
+    let queryParam=[];
+    /* DETECT QUERY PARAMS */
+    /*
+    This part of code will detect the user input settings.
+    if user input city, organizer or category,
+    it will add the param into the sql query.
+     */
+    if(city){ // if user selected city option
+        sql += " AND `CITY` = ?"; // add city into the sql
+        queryParam.push(city); // add parameter
+    }
+    if(organizer){ // if user selected organizer option
+        sql += " AND `ORGANIZER` = ?"; // add organizer into the sql
+        queryParam.push(organizer); // add parameter
+    }
+    if(category){ // if user selected organizer option
+        sql += " AND `NAME` = ?"; // add organizer into the sql
+        queryParam.push(category); // add parameter
+    }
+    connection.query(sql, queryParam,(err, records)=>{
+        if(err){
+            console.error("An error occurred while searching", err);
+        }
+        else{
+            res.send(records);
+        }
+    })
+});
+/**
+ * GET Fundraiser details
+ * This API will need the id of fundraiser and respond the detail of the fundraiser.
+ */
+router.get('fundraiser/:id',(req, res)=>{
+    connection.query("SELECT * FROM `FUNDRAISER` WHERE `FUNDRAISER_ID` = '"+ res.params.id +"'",(err, records)=>{
+        if(err){
+            console.error("Error while getting fundraiser data", err);
+        }
+        else{
+            res.send(records);
+        }
+    });
+});
 
 // Export router
 module.exports = router;
