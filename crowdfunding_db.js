@@ -14,10 +14,9 @@ var dbDetails = require('./db-details.js');
  * The function will read the db-details file's information
  * and establish the connection.
  *
- * @type {{getConnection: (function(): Connection)}}
  */
 module.exports = {
-    getConnection: ()=>{ // The anonymous function is used to establish a database connection
+    getConnection: ()=>{// The anonymous function is used to establish a database connection
         console.log("Connected!")
         return mysql.createConnection({
             host: dbDetails.host,
