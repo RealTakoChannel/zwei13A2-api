@@ -20,12 +20,12 @@ connection.connect()
  * GET Active Fundraisers
  * This method will retrieve data and display in Home page
  */
-router.get("/getActiveFundraisers",async (req, res) => { // use express router to make a GET API
+router.get("/getActiveFundraiser",async (req, res) => { // use express router to make a GET API
     connection.query( // mysql query
         "SELECT * FROM FUNDRAISER where ACTIVE = '1'", // select data which is activated
         (err,result,fields)=>{ // get result
             if(err){ // if error occurred
-                console.log("An error occurred while querying") // send an error message
+                console.log("An error occurred while querying FUNDRAISER") // send an error message
             }
             else{
                 res.send(result); // send result
@@ -35,7 +35,20 @@ router.get("/getActiveFundraisers",async (req, res) => { // use express router t
 });
 /**
  * GET All Categories
+ * This method will retrieve CATEGORY table and display the data in the search page
  */
+router.get("/getCategory", async (req, res)=>{
+    connection.query(
+        "SELECT * FROM CATEGORY",
+        (err, result, fields)=>{
+            if(err){
+                console.log("An error occurred while querying CATEGORY");
+            }
+            else{
+                res.send(result);
+            }
+        });
+});
 
 // Export router
 module.exports = router;
