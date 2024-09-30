@@ -18,7 +18,6 @@ build/
 log/
 tmp/
 tests/
-node_modules/
 /coverage/
 .editorconfig
 .env.local

@@ -5,8 +5,6 @@
 
 // import modules
 const mysql = require('mysql2'); // import MySQL
-const bodyParser = require("body-parser"); // import body-parser
-const http = require("http"); // import http client
 
 // import database details
 var dbDetails = require('./db-details.js');
