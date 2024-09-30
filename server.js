@@ -15,5 +15,5 @@ const dataServer = express();
 
 dataServer.use("/api", databaseAPI); // call the controller api
 
-dataServer.listen(4090); // start the server at the port 4090
-console.log("Server up and running on port 4090"); // send a log
+dataServer.listen(8888); // start the server at the port 8888
+console.log("Server up and running on port 8888"); // send a log
