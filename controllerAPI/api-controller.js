@@ -131,7 +131,7 @@ router.get("/searchFundraiser",(req, res)=>{
  * This API will need the id of fundraiser and respond the detail of the fundraiser.
  */
 router.get('fundraiser/:id',(req, res)=>{
-    connection.query("SELECT * FROM `FUNDRAISER` WHERE `FUNDRAISER_ID` = '"+ res.params.id +"'",(err, records)=>{
+    connection.query("SELECT * FROM `FUNDRAISER` WHERE `FUNDRAISER_ID` = '"+ res.params.id +"'",(err, records)=>{ // get the fundraiser by id
         if(err){
             console.error("Error while getting fundraiser data", err);
         }
