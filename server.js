@@ -3,17 +3,21 @@
  * the file will call the controller api and start the server
  */
 
-/**
- * import modules
- */
+/* import modules */
 const express = require("express"); // import express
+const cors = require("cors"); // import cors
 const databaseAPI = require("./controllerAPI/api-controller.js"); // import controller api
-/**
- * initialize server
- */
+
+/* initialize server */
+// assign host and port
+const host = 'localhost';
+const port = 8888;
 const dataServer = express();
+// let all access pass
+dataServer.use(cors());
 
 dataServer.use("/api", databaseAPI); // call the controller api
-
-dataServer.listen(8888); // start the server at the port 8888
-console.log("Server up and running on port 8888"); // send a log
+// open the server on 8888
+dataServer.listen(port, host, () => {
+    console.log(`Server is running on http://${host}:${port}`);
+});
