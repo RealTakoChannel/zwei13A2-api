@@ -160,16 +160,16 @@ router.get("/searchFundraiser",(req, res)=>{
  * GET Fundraiser details
  * This API will need the id of fundraiser and respond the detail of the fundraiser.
  */
-router.get('fundraiser/:id',(req, res)=>{
-    connection.query("SELECT * FROM `FUNDRAISER` WHERE `FUNDRAISER_ID` = '"+ res.params.id +"'",(err, records)=>{ // get the fundraiser by id
-        if(err){
-            console.error("Error while getting fundraiser data", err);
-        }
-        else{
+router.get('/fundraiser/:id',  (req, res) => {
+    const { id } = req.params;
+    const sql=` SELECT * FROM fundraiser JOIN crowdfunding_db.category c on c.CATEGORY_ID = fundraiser.CATEGORY_ID WHERE FUNDRAISER_ID = ?`
+    connection.query(sql,[id],(err,records,fields) => {
+        if (err) {
+            console.error('Error retrieving product:', err);
+        } else {
             res.send(records);
         }
     });
 });
-
 // Export router
 module.exports = router;
