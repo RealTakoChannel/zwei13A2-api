@@ -106,18 +106,48 @@ router.get("/searchFundraiser",(req, res)=>{
     it will add the param into the sql query.
      */
     if(city){ // if user selected city option
-        sql += " AND `CITY` = ?"; // add city into the sql
-        queryParam.push(city); // add parameter
+        sql+= " AND (" // use and to connect different properties
+        let array = city.split(","); // split the input string
+        i =array.length;
+        array.forEach((item)=>{// loop through the array
+            sql += "`CITY` = ?"; // add city into the sql
+            queryParam.push(item); // add parameter
+            if(i>1){ // if more than 1 city selected
+                sql+=" OR " // use OR to select more than one parameter
+                i--;
+            }
+        });
+        sql+=")" // Right bracket
     }
     if(organizer){ // if user selected organizer option
-        sql += " AND `ORGANIZER` = ?"; // add organizer into the sql
-        queryParam.push(organizer); // add parameter
+        sql+= " AND (" // use and to connect different properties
+        let array = organizer.split(","); // split the input string
+        i =array.length;
+        array.forEach((item)=>{ // loop through the array
+            sql += "`ORGANIZER` = ?"; // add city into the sql
+            queryParam.push(item); // add parameter
+            if(i>1){ // if more than 1 city selected
+                sql+=" OR " // use OR to select more than one parameter
+                i--;
+            }
+        });
+        sql+=")" // Right bracket
     }
     if(category){ // if user selected organizer option
-        sql += " AND `NAME` = ?"; // add organizer into the sql
-        queryParam.push(category); // add parameter
+        sql+= " AND (" // use and to connect different properties
+        let array = category.split(","); // split the input string
+        i =array.length;
+        array.forEach((item)=>{ // loop through the array
+            sql += "`NAME` = ?"; // add city into the sql
+            queryParam.push(item); // add parameter
+            if(i>1){ // if more than 1 city selected
+                sql+=" OR " // use OR to select more than one parameter
+                i--;
+            }
+        });
+        sql+=")" // Right bracket
     }
-    connection.query(sql, queryParam,(err, records)=>{
+    connection.execute(sql, queryParam,(err, records)=>{
         if(err){
             console.error("An error occurred while searching", err);
         }
